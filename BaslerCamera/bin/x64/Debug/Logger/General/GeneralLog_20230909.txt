@@ -1,0 +1,40 @@
+2023年9月9日 下午 04:25:16 - 儲存參數!
+2023年9月9日 下午 04:25:16 - 完成儲存參數!
+2023年9月9日 下午 04:25:21 - 完成設定相機參數!
+2023年9月9日 下午 04:44:16 - Turn on the camera!
+2023年9月9日 下午 04:44:24 - Turn off the camera!
+2023年9月9日 下午 04:44:28 - Save the Image!
+2023年9月9日 下午 04:44:37 - Turn on the camera!
+2023年9月9日 下午 04:44:41 - Save the Image!
+2023年9月9日 下午 04:44:50 - Save the Image!
+2023年9月9日 下午 04:44:58 - Turn off the camera!
+2023年9月9日 下午 04:44:59 - Turn on the camera!
+2023年9月9日 下午 04:48:58 - Turn on the camera!
+2023年9月9日 下午 04:49:33 - Turn off the camera!
+2023年9月9日 下午 04:50:02 - 儲存參數!
+2023年9月9日 下午 04:50:02 - Save config!
+2023年9月9日 下午 04:50:05 - 儲存參數!
+2023年9月9日 下午 04:50:05 - Save config!
+2023年9月9日 下午 04:50:06 - 儲存參數!
+2023年9月9日 下午 04:50:06 - Save config!
+2023年9月9日 下午 04:50:07 - 儲存參數!
+2023年9月9日 下午 04:50:07 - Save config!
+2023年9月9日 下午 04:52:30 - Turn on the camera!
+2023年9月9日 下午 04:52:46 - Set the camera parameter!
+2023年9月9日 下午 04:52:56 - Save config!
+2023年9月9日 下午 05:52:58 - Save config!
+2023年9月9日 下午 06:16:15 - Turn on the camera!
+2023年9月9日 下午 06:17:11 - Save the Image!
+2023年9月9日 下午 06:17:48 - Turn on the camera!
+2023年9月9日 下午 06:17:54 - Save the Image!
+2023年9月9日 下午 07:15:52 - Turn on the camera!
+2023年9月9日 下午 07:16:03 - Save the Image!
+2023年9月9日 下午 07:17:56 - Turn on the camera!
+2023年9月9日 下午 07:17:58 - Save the Image!
+2023年9月9日 下午 09:10:05 - Turn on the camera!
+2023年9月9日 下午 09:10:11 - Turn off the camera!
+2023年9月9日 下午 09:10:14 - Turn on the camera!
+2023年9月9日 下午 09:10:21 - Save the Image!
+2023年9月9日 下午 09:10:37 - Set the camera parameter!
+2023年9月9日 下午 09:10:47 - Set the camera parameter!
+2023年9月9日 下午 09:10:58 - Set the camera parameter!
