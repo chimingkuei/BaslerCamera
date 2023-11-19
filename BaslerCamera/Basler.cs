@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -55,8 +56,10 @@ namespace BaslerCamera
                         IntPtr ptrBmp = bmpData.Scan0;
                         converter.Convert(ptrBmp, bmpData.Stride * bitmap.Height, grabResult);
                         bitmap.UnlockBits(bmpData);
-                        //opencvsharp.mat src = opencvsharp.extensions.bitmapconverter.tomat(bitmap);
-                        //opencvsharp.mat result = src.threshold(150, 255, opencvsharp.thresholdtypes.binary);
+                        #region DIP
+                        //OpenCvSharp.Mat src = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
+                        //OpenCvSharp.Mat result = src.Threshold(150, 255, OpenCvSharp.ThresholdTypes.Binary);
+                        #endregion
                         if (save_img)
                         {
                             bitmap.Save(Path.Combine(image_storage_path, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"));
@@ -65,8 +68,10 @@ namespace BaslerCamera
                         // Assign a temporary variable to dispose the bitmap after assigning the new bitmap to the display control.
                         Bitmap bitmapOld = Display.Image as Bitmap;
                         // Provide the display control with the new bitmap. This action automatically updates the display.
-                        //Display_Windows.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(result);
                         Display.Image = bitmap;
+                        #region Show DIP Result
+                        //Display_Windows.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(result);
+                        #endregion
                         if (bitmapOld != null)
                         {
                             // Dispose the bitmap.
@@ -142,8 +147,6 @@ namespace BaslerCamera
                 ShowException(exception);
             }
         }
-
-
 
     }
 
