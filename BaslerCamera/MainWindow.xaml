@@ -11,7 +11,7 @@
         ResizeMode="CanMinimize"
         Title="BaslerCamera" Height="700" Width="1000" Background="#FF3E6FB3" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid>
-        <TabControl x:Name="Log" HorizontalAlignment="Left" Height="172" Margin="5,490,0,0" VerticalAlignment="Top" Width="790" Background="#FFE6F0FF">
+        <TabControl x:Name="Log" HorizontalAlignment="Left" Height="172" Margin="5,485,0,0" VerticalAlignment="Top" Width="790" Background="#FFE6F0FF">
             <TabControl.Resources>
                 <Style TargetType="RichTextBox">
                     <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
@@ -38,7 +38,7 @@
             </TabItem>
         </TabControl>
         <Image x:Name="Logo" Height="142" Margin="814,514,21,0" VerticalAlignment="Top" Width="159" Source="Icon/Len.png"/>
-        <TabControl HorizontalAlignment="Left" Margin="5,8,0,0" VerticalAlignment="Top" Height="478" Width="978" Background="#FFE6F0FF">
+        <TabControl HorizontalAlignment="Left" Margin="5,3,0,0" VerticalAlignment="Top" Height="478" Width="978" Background="#FFE6F0FF">
             <TabItem Header="Main Screen" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
                     <WindowsFormsHost  Margin="5,7,218,4">
