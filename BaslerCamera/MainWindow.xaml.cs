@@ -1,11 +1,13 @@
 ﻿using Basler.Pylon;
 using Newtonsoft.Json.Linq;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +17,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -26,9 +29,12 @@ namespace BaslerCamera
         public double ExposureTime_val { get; set; }
         public double Gamma_val { get; set; }
         public string Save_Image_Path_val { get; set; }
+        public int Binary_val { get; set; }
+        public int Box_Width_val { get; set; }
+        public int Box_Length_val { get; set; }
     }
     
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         
         public MainWindow()
@@ -94,6 +100,10 @@ namespace BaslerCamera
                 DisableAllButtons(this);
                 DisableAllToggleButton(this);
             }
+            else
+            {
+                BC.OpenCamera();
+            }
         }
 
         private Dictionary<string, double> GetCameraParameterRage()
@@ -156,6 +166,9 @@ namespace BaslerCamera
             ExposureTime.Text = Parameter_info[0].ExposureTime_val.ToString();
             Gamma.Text = Parameter_info[0].Gamma_val.ToString();
             Save_Image_Path.Text = Parameter_info[0].Save_Image_Path_val;
+            Binary.Text = Parameter_info[0].Binary_val.ToString();
+            Box_Width.Text = Parameter_info[0].Box_Width_val.ToString();
+            Box_Length.Text = Parameter_info[0].Box_Length_val.ToString();
         }
 
         private void SaveConfig()
@@ -167,13 +180,26 @@ namespace BaslerCamera
                                Gain_val=Convert.ToDouble(Gain.Text),
                                ExposureTime_val=Convert.ToDouble(ExposureTime.Text),
                                Gamma_val=Convert.ToDouble(Gamma.Text),
-                               Save_Image_Path_val = Save_Image_Path.Text
+                               Save_Image_Path_val = Save_Image_Path.Text,
+                               Binary_val = Convert.ToInt32(Binary.Text),
+                               Box_Width_val = Convert.ToInt32(Box_Width.Text),
+                               Box_Length_val = Convert.ToInt32(Box_Length.Text)
                             }
                         };
             Config.Save(Parameter_config);
             Logger.WriteLog("Save config!", 1, richTextBoxGeneral);
         }
         #endregion
+
+        private void Image_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (Display_Windows.Image != null)
+            {
+                System.Drawing.Color pixelColor = ((System.Drawing.Bitmap)Display_Windows.Image).GetPixel(e.X, e.Y);
+                Show_RGB.Content = $"RGB: ({pixelColor.R}, {pixelColor.G}, {pixelColor.B})";
+
+            }
+        }
         #endregion
 
         #region Parameter and Init
@@ -186,6 +212,7 @@ namespace BaslerCamera
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
         Basler BC = new Basler();
         bool Cam_IsOpen = false;
+        Algorithm DIP = new Algorithm();
         #endregion
 
         #region Main Screen
@@ -201,8 +228,12 @@ namespace BaslerCamera
                             {
                                 if (Directory.Exists(Save_Image_Path.Text))
                                 {
-                                    BC.image_storage_path = Save_Image_Path.Text;
                                     BC.save_img = true;
+                                    Thread.Sleep(20);
+                                    Mat image_copy = BC.image.Clone();
+                                    List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
+                                    DIP.GenerateYoloAnnotation(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
+                                    Cv2.ImWrite(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"), image_copy);
                                     Logger.WriteLog("Save the Image!", 1, richTextBoxGeneral);
                                 }
                                 else
@@ -219,7 +250,6 @@ namespace BaslerCamera
                         {
                             MessageBox.Show("Camera doesn't turn on!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
-                        
                         break;
                     }
             }
@@ -230,7 +260,7 @@ namespace BaslerCamera
         {
             try
             {
-                BC.OpenCamera();
+                
                 CameraParameterInit();
                 BC.ContinueAcquisition();
                 ChangeIcon(Continue_Acquisition_Icon, @"Icon\Stop.png", "Stop Acquisition", "Turn on the camera!");
@@ -240,7 +270,7 @@ namespace BaslerCamera
             {
                 MessageBox.Show("Camera initializing failed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            
+
         }
         private void Continue_Acquisition_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -251,7 +281,7 @@ namespace BaslerCamera
         #endregion
         #endregion
 
-        #region
+        #region Parameter Screen
         private void Parameter_Btn_Click(object sender, RoutedEventArgs e)
         {
             switch ((sender as Button).Name)

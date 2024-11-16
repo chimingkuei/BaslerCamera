@@ -4,16 +4,16 @@
 exe
 C#
 .cs
-C:\Data Disk\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\
+D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\
 BaslerCamera
 none
 false
 DEBUG;TRACE
-C:\Data Disk\Chimingkuei\repos\BaslerCamera\BaslerCamera\App.xaml
-9-510238257
-41374514153
-91700697440
-34118717297
+D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\App.xaml
+995768037
+4812372747
+101154401161
+34-1498887880
 MainWindow.xaml;UI\ButtonStyles.xaml;UI\CheckBoxStyles.xaml;UI\ComboBoxStyles.xaml;UI\GroupBoxStyles.xaml;UI\RadioButtonStyles.xaml;UI\SliderStyles.xaml;UI\TabControlStyles.xaml;UI\TextBoxStyles.xaml;
 
 False

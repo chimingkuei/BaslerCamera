@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Basler.Pylon;
+using OpenCvSharp;
 
 namespace BaslerCamera
 {
@@ -22,7 +23,8 @@ namespace BaslerCamera
         public PictureBox Display = new PictureBox();
         public bool save_img;
         public string image_storage_path;
-
+        public int threshold { get; set; }
+        public Mat image { get; set; }
 
         private void OnImageGrabbed(Object sender, ImageGrabbedEventArgs e)
         {
@@ -57,12 +59,15 @@ namespace BaslerCamera
                         converter.Convert(ptrBmp, bmpData.Stride * bitmap.Height, grabResult);
                         bitmap.UnlockBits(bmpData);
                         #region DIP
-                        //OpenCvSharp.Mat src = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
+                        OpenCvSharp.Mat src = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
                         //OpenCvSharp.Mat result = src.Threshold(150, 255, OpenCvSharp.ThresholdTypes.Binary);
                         #endregion
                         if (save_img)
                         {
-                            bitmap.Save(Path.Combine(image_storage_path, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"));
+                            //List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(src, threshold);
+                            //DIP.GenerateYoloAnnotation(Path.Combine(image_storage_path, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), src.Width, src.Height, Annotation);
+                            //bitmap.Save(Path.Combine(image_storage_path, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"));
+                            image = src;
                             save_img = false;
                         }
                         // Assign a temporary variable to dispose the bitmap after assigning the new bitmap to the display control.

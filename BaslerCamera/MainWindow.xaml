@@ -42,7 +42,7 @@
             <TabItem Header="Main Screen" Style="{StaticResource BaseTabcontrol}">
                 <Grid>
                     <WindowsFormsHost  Margin="5,7,218,4">
-                        <wf:PictureBox x:Name="Display_Windows" BorderStyle="FixedSingle"/>
+                        <wf:PictureBox x:Name="Display_Windows" BorderStyle="FixedSingle" MouseMove="Image_MouseMove"/>
                     </WindowsFormsHost>
                     <WrapPanel Orientation="Horizontal" Margin="756,-2,0,0">
                         <ToggleButton Name="Continue_Acquisition" Margin="67,53,0,0" Background="#FFE6F0FF" BorderThickness="0" Checked="Continue_Acquisition_Checked" Unchecked="Continue_Acquisition_Unchecked">
@@ -57,6 +57,7 @@
                             </Button.ToolTip>
                             <Image x:Name="Save_Image_Icon" Source="Icon/Save File.png" Width="82" Height="76"/>
                         </Button>
+                        <Label x:Name="Show_RGB" Margin="38,140,0,0" Height="37" Width="140" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     </WrapPanel>
                 </Grid>
             </TabItem>
@@ -69,21 +70,21 @@
                         <Image x:Name="Open_Image_Storage_Folder_Icon" Source="Icon/Open Folder Path.png" Width="82" Height="76"/>
                     </Button>
                     <TextBox x:Name="Save_Image_Path" Style="{StaticResource BaseTextBox}" Margin="208,51,98,344" FontSize="12"></TextBox>
-                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="91,133,461,16" Header="Camera Parameter" FontSize="22" Background="Green">
+                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="59,133,608,16" Header="Camera Parameter" FontSize="22" Background="Green">
                         <WrapPanel Orientation="Horizontal" Margin="-8,-8,-9,-8">
-                            <Label x:Name="Gain_Label" Content="Gain:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="171,33,0,0"/>
+                            <Label x:Name="Gain_Label" Content="Gain:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="90,33,0,0"/>
                             <xctk:DoubleUpDown x:Name="Gain" Increment="0.01" TextAlignment="Center" FontSize="20" Width="100" Height="40" Margin="0,33,0,0">
                                 <xctk:DoubleUpDown.ToolTip>
                                     <TextBlock x:Name="Gain_Tip" FontSize="14"/>
                                 </xctk:DoubleUpDown.ToolTip>
                             </xctk:DoubleUpDown >
-                            <Label x:Name="ExposureTime_Label" Content="ExposureTime:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="91,33,0,0"/>
+                            <Label x:Name="ExposureTime_Label" Content="ExposureTime:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="10,33,0,0"/>
                             <xctk:DoubleUpDown x:Name="ExposureTime" Increment="1" TextAlignment="Center" FontSize="20" Width="100" Height="40" Margin="0,33,0,0">
                                 <xctk:DoubleUpDown.ToolTip>
                                     <TextBlock x:Name="ExposureTime_Tip" FontSize="14"/>
                                 </xctk:DoubleUpDown.ToolTip>
                             </xctk:DoubleUpDown >
-                            <Label x:Name="Gamma_Label" Content="Gamma:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="144,33,0,0" Height="40"/>
+                            <Label x:Name="Gamma_Label" Content="Gamma:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="64,33,0,0" Height="40"/>
                             <xctk:DoubleUpDown x:Name="Gamma" Minimum="0" Maximum="3.99" Increment="0.01" TextAlignment="Center" FontSize="20" Width="100" Height="40" Margin="0,33,0,0">
                                 <xctk:DoubleUpDown.ToolTip>
                                     <TextBlock x:Name="Gamma_Tip" FontSize="14"/>
@@ -91,18 +92,28 @@
                             </xctk:DoubleUpDown >
                         </WrapPanel>
                     </GroupBox>
-                    <Button x:Name="Set_Camera_Parameter" Style="{StaticResource BaseButton}" Margin="663,210,227,158" FontSize="18"  Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click">
+                    <Button x:Name="Set_Camera_Parameter" Style="{StaticResource BaseButton}" Margin="812,172,78,195" FontSize="18"  Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click">
                         <Button.ToolTip>
                             <TextBlock FontSize="14">Set Camera Parameter</TextBlock>
                         </Button.ToolTip>
                         <Image x:Name="Set_Camera_Parameter_Icon" Source="Icon/Load Camera Config.png" Width="82" Height="76"/>
                     </Button>
-                    <Button x:Name="Save_Config" Style="{StaticResource BaseButton}" Margin="663,310,223,56" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click">
+                    <Button x:Name="Save_Config" Style="{StaticResource BaseButton}" Margin="812,287,74,79" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Parameter_Btn_Click">
                         <Button.ToolTip>
                             <TextBlock FontSize="14">Save Config</TextBlock>
                         </Button.ToolTip>
                         <Image x:Name="Save_Config_Icon" Source="Icon/Save Config.png" Width="82" Height="76"/>
                     </Button>
+                    <GroupBox Style="{StaticResource BaseGroupBox}" Margin="430,133,236,15" Header="AOI Parameter" FontSize="22" Background="Green">
+                        <WrapPanel Orientation="Horizontal" Margin="-8,-8,-9,-8">
+                            <Label x:Name="Binary_Label" Content="Binarization:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="40,33,0,0"/>
+                            <xctk:IntegerUpDown x:Name="Binary" Increment="1" Maximum="255" Minimum="0" TextAlignment="Center" FontSize="20" Width="100" Height="40" Margin="0,33,0,0"/>
+                            <Label x:Name="Box_Width_Label" Content="Box Width:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="52,33,0,0"/>
+                            <xctk:IntegerUpDown x:Name="Box_Width" Increment="1" Minimum="0" TextAlignment="Center" FontSize="20" Width="100" Height="40" Margin="0,33,0,0"/>
+                            <Label x:Name="Box_Length_Label" Content="Box Length:" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="45,33,0,0"/>
+                            <xctk:IntegerUpDown x:Name="Box_Length" Increment="1" Minimum="0" TextAlignment="Center" FontSize="20" Width="100" Height="40" Margin="0,33,0,0"/>
+                        </WrapPanel>
+                    </GroupBox>
                 </Grid>
             </TabItem>
         </TabControl>
