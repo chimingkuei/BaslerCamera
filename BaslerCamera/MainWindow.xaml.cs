@@ -228,8 +228,6 @@ namespace BaslerCamera
                             {
                                 if (Directory.Exists(Save_Image_Path.Text))
                                 {
-                                    BC.save_img = true;
-                                    Thread.Sleep(20);
                                     Mat image_copy = BC.image.Clone();
                                     List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
                                     DIP.GenerateYoloAnnotation(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
