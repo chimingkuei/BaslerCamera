@@ -25,6 +25,7 @@ namespace BaslerCamera
         public string image_storage_path;
         public int threshold { get; set; }
         public Mat image { get; set; }
+        public ImageFormat ImageFormatType { get; set; }
 
         #region Old Version
         //private void OnImageGrabbed(Object sender, ImageGrabbedEventArgs e)
@@ -103,9 +104,23 @@ namespace BaslerCamera
                     if (!stopWatch.IsRunning || stopWatch.ElapsedMilliseconds > 33)
                     {
                         stopWatch.Restart();
-                        Mat mat = new Mat(grabResult.Height, grabResult.Width, MatType.CV_8UC3); // CV_8UC3 适用于 BGR 格式
+                        Mat mat = null; 
+                        switch (ImageFormatType)
+                        {
+                            case ImageFormat.RGB8:
+                                {
+                                    mat = new Mat(grabResult.Height, grabResult.Width, MatType.CV_8UC3);
+                                    converter.OutputPixelFormat = PixelType.BGR8packed;
+                                    break;
+                                }
+                            case ImageFormat.Mono8:
+                                {
+                                    mat = new Mat(grabResult.Height, grabResult.Width, MatType.CV_8UC1);
+                                    converter.OutputPixelFormat = PixelType.Mono8;
+                                    break;
+                                }
+                        }
                         IntPtr ptrMat = mat.Data;
-                        converter.OutputPixelFormat = PixelType.BGR8packed;
                         converter.Convert(ptrMat, mat.Step() * mat.Rows, grabResult);
                         image = mat;
                         Bitmap bitmapOld = Display.Image as Bitmap;

@@ -23,6 +23,11 @@ using System.Windows.Shapes;
 
 namespace BaslerCamera
 {
+    enum ImageFormat
+    {
+        RGB8, Mono8
+    }
+
     public class Parameter
     {
         public double Gain_val { get; set; }
@@ -258,7 +263,14 @@ namespace BaslerCamera
         {
             try
             {
-                
+                if (ImageFormatComboBox.Text == "RGB8")
+                {
+                    BC.ImageFormatType = ImageFormat.RGB8;
+                }
+                else if (ImageFormatComboBox.Text == "Mono8")
+                {
+                    BC.ImageFormatType = ImageFormat.Mono8;
+                }
                 CameraParameterInit();
                 BC.ContinueAcquisition();
                 ChangeIcon(Continue_Acquisition_Icon, @"Icon\Stop.png", "Stop Acquisition", "Turn on the camera!");

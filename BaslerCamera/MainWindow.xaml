@@ -57,6 +57,10 @@
                             </Button.ToolTip>
                             <Image x:Name="Save_Image_Icon" Source="Icon/Save File.png" Width="82" Height="76"/>
                         </Button>
+                        <ComboBox x:Name="ImageFormatComboBox" Style="{StaticResource BaseComboBox}" Width="114" Margin="51,53,0,0" Height="28">
+                            <ComboBoxItem>Mono8</ComboBoxItem>
+                            <ComboBoxItem>RGB8</ComboBoxItem>
+                        </ComboBox>
                         <Label x:Name="Show_RGB" Margin="38,140,0,0" Height="37" Width="140" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     </WrapPanel>
                 </Grid>
