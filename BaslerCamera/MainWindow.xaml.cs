@@ -37,6 +37,7 @@ namespace BaslerCamera
         public int Binary_val { get; set; }
         public int Box_Width_val { get; set; }
         public int Box_Length_val { get; set; }
+        public string ImageFormatComboBox_val { get; set; }
     }
     
     public partial class MainWindow : System.Windows.Window
@@ -174,6 +175,7 @@ namespace BaslerCamera
             Binary.Text = Parameter_info[0].Binary_val.ToString();
             Box_Width.Text = Parameter_info[0].Box_Width_val.ToString();
             Box_Length.Text = Parameter_info[0].Box_Length_val.ToString();
+            ImageFormatComboBox.Text = Parameter_info[0].ImageFormatComboBox_val;
         }
 
         private void SaveConfig()
@@ -188,7 +190,8 @@ namespace BaslerCamera
                                Save_Image_Path_val = Save_Image_Path.Text,
                                Binary_val = Convert.ToInt32(Binary.Text),
                                Box_Width_val = Convert.ToInt32(Box_Width.Text),
-                               Box_Length_val = Convert.ToInt32(Box_Length.Text)
+                               Box_Length_val = Convert.ToInt32(Box_Length.Text),
+                               ImageFormatComboBox_val = ImageFormatComboBox.Text
                             }
                         };
             Config.Save(Parameter_config);
@@ -234,8 +237,8 @@ namespace BaslerCamera
                                 if (Directory.Exists(Save_Image_Path.Text))
                                 {
                                     Mat image_copy = BC.image.Clone();
-                                    List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
-                                    DIP.GenerateYoloAnnotation(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
+                                    //List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
+                                    //DIP.GenerateYoloAnnotation(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
                                     Cv2.ImWrite(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"), image_copy);
                                     Logger.WriteLog("Save the Image!", 1, richTextBoxGeneral);
                                 }
