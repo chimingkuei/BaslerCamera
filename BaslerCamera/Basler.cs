@@ -16,6 +16,11 @@ using OpenCvSharp.Extensions;
 
 namespace BaslerCamera
 {
+    enum ImageFormat
+    {
+        RGB8, Mono8
+    }
+
     class Basler
     {
         public Camera camera = null;

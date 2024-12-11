@@ -23,11 +23,6 @@ using System.Windows.Shapes;
 
 namespace BaslerCamera
 {
-    enum ImageFormat
-    {
-        RGB8, Mono8
-    }
-
     public class Parameter
     {
         public double Gain_val { get; set; }
