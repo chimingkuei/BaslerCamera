@@ -232,8 +232,8 @@ namespace BaslerCamera
                                 if (Directory.Exists(Save_Image_Path.Text))
                                 {
                                     Mat image_copy = BC.image.Clone();
-                                    //List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
-                                    //DIP.GenerateYoloAnnotation(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
+                                    List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
+                                    DIP.GenerateYoloAnnotation(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
                                     Cv2.ImWrite(System.IO.Path.Combine(Save_Image_Path.Text, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"), image_copy);
                                     Logger.WriteLog("Save the Image!", 1, richTextBoxGeneral);
                                 }
@@ -261,9 +261,9 @@ namespace BaslerCamera
         {
             try
             {
-                if (ImageFormatComboBox.Text == "RGB8")
+                if (ImageFormatComboBox.Text == "BGR8")
                 {
-                    BC.ImageFormatType = ImageFormat.RGB8;
+                    BC.ImageFormatType = ImageFormat.BGR8;
                 }
                 else if (ImageFormatComboBox.Text == "Mono8")
                 {
