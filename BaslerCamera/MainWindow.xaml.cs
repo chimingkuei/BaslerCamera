@@ -257,34 +257,37 @@ namespace BaslerCamera
         }
 
         #region Continue Acquisition ToggleButton
-        private void Continue_Acquisition_Checked(object sender, RoutedEventArgs e)
+        private void Continue_Acquisition_CheckedUnchecked(object sender, RoutedEventArgs e)
         {
-            try
+            var toggleButton = sender as ToggleButton;
+            if (toggleButton.IsChecked == true)
             {
-                if (ImageFormatComboBox.Text == "BGR8")
+                try
                 {
-                    BC.ImageFormatType = ImageFormat.BGR8;
+                    if (ImageFormatComboBox.Text == "BGR8")
+                    {
+                        BC.ImageFormatType = ImageFormat.BGR8;
+                    }
+                    else if (ImageFormatComboBox.Text == "Mono8")
+                    {
+                        BC.ImageFormatType = ImageFormat.Mono8;
+                    }
+                    CameraParameterInit();
+                    BC.ContinueAcquisition();
+                    ChangeIcon(Continue_Acquisition_Icon, @"Icon\Stop.png", "Stop Acquisition", "Turn on the camera!");
+                    Cam_IsOpen = true;
                 }
-                else if (ImageFormatComboBox.Text == "Mono8")
+                catch
                 {
-                    BC.ImageFormatType = ImageFormat.Mono8;
+                    MessageBox.Show("Camera initializing failed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-                CameraParameterInit();
-                BC.ContinueAcquisition();
-                ChangeIcon(Continue_Acquisition_Icon, @"Icon\Stop.png", "Stop Acquisition", "Turn on the camera!");
-                Cam_IsOpen = true;
             }
-            catch
+            else
             {
-                MessageBox.Show("Camera initializing failed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                BC.StopAcquisition();
+                ChangeIcon(Continue_Acquisition_Icon, @"Icon\Start.png", "Continue Acquisition", "Turn off the camera!");
+                Cam_IsOpen = false;
             }
-
-        }
-        private void Continue_Acquisition_Unchecked(object sender, RoutedEventArgs e)
-        {
-            BC.StopAcquisition();
-            ChangeIcon(Continue_Acquisition_Icon, @"Icon\Start.png", "Continue Acquisition", "Turn off the camera!");
-            Cam_IsOpen = false;
         }
         #endregion
         #endregion
