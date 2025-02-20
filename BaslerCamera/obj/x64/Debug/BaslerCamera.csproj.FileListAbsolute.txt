@@ -130,3 +130,4 @@ D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\BaslerCamera.csproj
 D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\BaslerCamera.exe
 D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\BaslerCamera.pdb
 D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\BaslerCa.E181DE20.Up2Date
+D:\Chimingkuei\repos\BaslerCamera\BaslerCamera\obj\x64\Debug\UI\ToggleButtonStyles.baml

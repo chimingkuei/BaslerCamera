@@ -184,6 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UI\ToggleButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -239,6 +243,9 @@
   <ItemGroup>
     <Resource Include="UI\RadioButtonNoIcon.png" />
     <Resource Include="UI\RadioButtonYesIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon\Stop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
