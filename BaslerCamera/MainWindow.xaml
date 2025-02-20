@@ -45,7 +45,7 @@
                         <wf:PictureBox x:Name="Display_Windows" BorderStyle="FixedSingle" MouseMove="Image_MouseMove"/>
                     </WindowsFormsHost>
                     <WrapPanel Orientation="Horizontal" Margin="756,-2,0,0">
-                        <ToggleButton Name="Continue_Acquisition" Margin="67,53,0,0" Background="#FFE6F0FF" BorderThickness="0" Checked="Continue_Acquisition_CheckedUnchecked" Unchecked="Continue_Acquisition_CheckedUnchecked">
+                        <ToggleButton Name="Continue_Acquisition" Style="{StaticResource BaseToggleButton}" Margin="67,53,0,0" Background="#FFE6F0FF" BorderThickness="0" Checked="Continue_Acquisition_CheckedUnchecked" Unchecked="Continue_Acquisition_CheckedUnchecked">
                             <ToggleButton.ToolTip>
                                 <TextBlock FontSize="14">Continue Acquisition</TextBlock>
                             </ToggleButton.ToolTip>
