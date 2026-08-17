@@ -72,6 +72,8 @@ namespace BaslerCamera
                 if (child is Button button)
                 {
                     button.IsEnabled = false;
+                    //string btnName = !string.IsNullOrEmpty(button.Name) ? button.Name : button.Content?.ToString();
+                    //Console.WriteLine($"已關閉按鈕: {btnName}");
                 }
                 DisableAllButtons(child);
             }
@@ -93,35 +95,32 @@ namespace BaslerCamera
 
         private void CameraInit()
         {
-            BC.Display = Display_Windows;
-            bool state;
-            BC.Init(out state);
-            if (!state)
+            bc.Display = Display_Windows;
+            bc.Init();
+            if (Display_Windows.Image == null)
             {
                 DisableAllButtons(this);
-                DisableAllToggleButton(this);
+                bc.OpenCamera();
+                //DisableAllToggleButton(this);
             }
-            else
-            {
-                BC.OpenCamera();
-            }
+            
         }
 
         private Dictionary<string, double> GetCameraParameterRage()
         {
             Dictionary<string, double> camera_parameter = new Dictionary<string, double>();
-            Gain.Minimum = BC.camera.Parameters[PLCamera.Gain].GetMinimum();
-            Gain.Maximum = BC.camera.Parameters[PLCamera.Gain].GetMaximum();
+            Gain.Minimum = bc.camera.Parameters[PLCamera.Gain].GetMinimum();
+            Gain.Maximum = bc.camera.Parameters[PLCamera.Gain].GetMaximum();
             camera_parameter.Add("Gain Min", (double)Gain.Minimum);
             camera_parameter.Add("Gain Max", (double)Gain.Maximum);
             Gain_Tip.Text = "min:" + Gain.Minimum.ToString() + ", max:" + Gain.Maximum.ToString();
-            ExposureTime.Minimum = BC.camera.Parameters[PLCamera.ExposureTime].GetMinimum();
-            ExposureTime.Maximum = BC.camera.Parameters[PLCamera.ExposureTime].GetMaximum();
+            ExposureTime.Minimum = bc.camera.Parameters[PLCamera.ExposureTime].GetMinimum();
+            ExposureTime.Maximum = bc.camera.Parameters[PLCamera.ExposureTime].GetMaximum();
             camera_parameter.Add("ExposureTime Min", (double)ExposureTime.Minimum);
             camera_parameter.Add("ExposureTime Max", (double)ExposureTime.Maximum);
             ExposureTime_Tip.Text = "min:" + ExposureTime.Minimum.ToString() + ", max:" + ExposureTime.Maximum.ToString();
-            Gamma.Minimum = BC.camera.Parameters[PLCamera.Gamma].GetMinimum();
-            Gamma.Maximum = BC.camera.Parameters[PLCamera.Gamma].GetMaximum();
+            Gamma.Minimum = bc.camera.Parameters[PLCamera.Gamma].GetMinimum();
+            Gamma.Maximum = bc.camera.Parameters[PLCamera.Gamma].GetMaximum();
             camera_parameter.Add("Gamma Min", (double)Gamma.Minimum);
             camera_parameter.Add("Gamma Max", (double)Gamma.Maximum);
             Gamma_Tip.Text = "min:" + Gamma.Minimum.ToString() + ", max:" + Gamma.Maximum.ToString();
@@ -135,27 +134,27 @@ namespace BaslerCamera
             // Load Camera Parameter
             if (Convert.ToDouble(Gain.Text) >= camera_parameter["Gain Min"] && Convert.ToDouble(Gain.Text) <= camera_parameter["Gain Max"])
             {
-                BC.camera.Parameters[PLCamera.Gain].SetValue(Convert.ToDouble(Gain.Text));
+                bc.camera.Parameters[PLCamera.Gain].SetValue(Convert.ToDouble(Gain.Text));
             }
             else
             {
-                BC.camera.Parameters[PLCamera.Gain].SetValue(camera_parameter["Gain Min"]);
+                bc.camera.Parameters[PLCamera.Gain].SetValue(camera_parameter["Gain Min"]);
             }
             if (Convert.ToDouble(ExposureTime.Text) >= camera_parameter["ExposureTime Min"] && Convert.ToDouble(ExposureTime.Text) <= camera_parameter["ExposureTime Max"])
             {
-                BC.camera.Parameters[PLCamera.ExposureTime].SetValue(Convert.ToDouble(ExposureTime.Text));
+                bc.camera.Parameters[PLCamera.ExposureTime].SetValue(Convert.ToDouble(ExposureTime.Text));
             }
             else
             {
-                BC.camera.Parameters[PLCamera.ExposureTime].SetValue(camera_parameter["ExposureTime Min"]);
+                bc.camera.Parameters[PLCamera.ExposureTime].SetValue(camera_parameter["ExposureTime Min"]);
             }
             if (Convert.ToDouble(Gamma.Text) >= camera_parameter["Gamma Min"] && Convert.ToDouble(Gamma.Text) <= camera_parameter["Gamma Max"])
             {
-                BC.camera.Parameters[PLCamera.Gamma].SetValue(Convert.ToDouble(Gamma.Text));
+                bc.camera.Parameters[PLCamera.Gamma].SetValue(Convert.ToDouble(Gamma.Text));
             }
             else
             {
-                BC.camera.Parameters[PLCamera.Gamma].SetValue(camera_parameter["Gamma Min"]);
+                bc.camera.Parameters[PLCamera.Gamma].SetValue(camera_parameter["Gamma Min"]);
             }
         }
 
@@ -208,13 +207,11 @@ namespace BaslerCamera
         #region Parameter and Init
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CameraInit();
             LoadConfig();
         }
         BaseLogRecord Logger = new BaseLogRecord();
         BaseConfig<Parameter> Config = new BaseConfig<Parameter>();
-        Basler BC = new Basler();
-        bool Cam_IsOpen = false;
+        Basler bc = new Basler();
         Algorithm DIP = new Algorithm();
         #endregion
 
@@ -225,7 +222,7 @@ namespace BaslerCamera
             {
                 case nameof(Save_Image):
                     {
-                        if (!Cam_IsOpen)
+                        if (!bc.camera.IsOpen)
                         {
                             MessageBox.Show("Camera doesn't turn on!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return;
@@ -241,7 +238,7 @@ namespace BaslerCamera
                             MessageBox.Show("Image storage path is invalid!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return;
                         }
-                        Mat image_copy = BC.image.Clone();
+                        Mat image_copy = bc.image.Clone();
                         List<(int classId, float x1, float y1, float x2, float y2)> Annotation = DIP.BoundingBox(image_copy, Convert.ToInt32(Binary.Text), Convert.ToInt32(Box_Width.Text), Convert.ToInt32(Box_Length.Text));
                         DIP.GenerateYoloAnnotation(System.IO.Path.Combine(saveImagePath, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"), image_copy.Width, image_copy.Height, Annotation);
                         Cv2.ImWrite(System.IO.Path.Combine(saveImagePath, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".bmp"), image_copy);
@@ -255,22 +252,20 @@ namespace BaslerCamera
         private void Continue_Acquisition_CheckedUnchecked(object sender, RoutedEventArgs e)
         {
             var toggleButton = sender as ToggleButton;
-            if (toggleButton.IsChecked == true)
+            if ((bool)toggleButton.IsChecked)
             {
                 try
                 {
-                    if (ImageFormatComboBox.Text == "BGR8")
+                    switch (ImageFormatComboBox.Text)
                     {
-                        BC.ImageFormatType = ImageFormat.BGR8;
+                        case "BGR8": bc.ImageFormatType = ImageFormat.BGR8; break;
+                        case "Mono8": bc.ImageFormatType = ImageFormat.Mono8; break;
+                        case "BayerRG8": bc.ImageFormatType = ImageFormat.BayerRG8; break;
                     }
-                    else if (ImageFormatComboBox.Text == "Mono8")
-                    {
-                        BC.ImageFormatType = ImageFormat.Mono8;
-                    }
+                    CameraInit();
                     CameraParameterInit();
-                    BC.ContinueAcquisition();
+                    bc.ContinueAcquisition();
                     ChangeIcon(Continue_Acquisition_Icon, @"Icon\Stop.png", "Stop Acquisition", "Turn on the camera!");
-                    Cam_IsOpen = true;
                 }
                 catch
                 {
@@ -279,9 +274,8 @@ namespace BaslerCamera
             }
             else
             {
-                BC.StopAcquisition();
+                bc.StopAcquisition();
                 ChangeIcon(Continue_Acquisition_Icon, @"Icon\Start.png", "Continue Acquisition", "Turn off the camera!");
-                Cam_IsOpen = false;
             }
         }
         #endregion
@@ -294,14 +288,14 @@ namespace BaslerCamera
             {
                 case nameof(Set_Camera_Parameter):
                     {
-                        if (!Cam_IsOpen)
+                        if (!bc.camera.IsOpen)
                         {
                             MessageBox.Show("Camera doesn't turn on!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                             return;
                         }
-                        BC.camera.Parameters[PLCamera.Gain].SetValue(Convert.ToDouble(Gain.Text));
-                        BC.camera.Parameters[PLCamera.ExposureTime].SetValue(Convert.ToDouble(ExposureTime.Text));
-                        BC.camera.Parameters[PLCamera.Gamma].SetValue(Convert.ToDouble(Gamma.Text));
+                        bc.camera.Parameters[PLCamera.Gain].SetValue(Convert.ToDouble(Gain.Text));
+                        bc.camera.Parameters[PLCamera.ExposureTime].SetValue(Convert.ToDouble(ExposureTime.Text));
+                        bc.camera.Parameters[PLCamera.Gamma].SetValue(Convert.ToDouble(Gamma.Text));
                         //BC.camera.Parameters[PLCamera.Width].SetValue(300);
                         //BC.camera.Parameters[PLCamera.Height].SetValue(300);
                         Logger.WriteLog("Set the camera parameter!", 1, richTextBoxGeneral);

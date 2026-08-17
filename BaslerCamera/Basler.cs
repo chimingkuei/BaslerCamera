@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace BaslerCamera
 
     class Basler
     {
-        public Camera camera = null;
+        public Camera camera = new Camera();// Can fill in the serial number.
         private PixelDataConverter converter = new PixelDataConverter();
         private Stopwatch stopWatch = new Stopwatch();
         public PictureBox Display = new PictureBox();
@@ -104,6 +105,7 @@ namespace BaslerCamera
             try
             {
                 IGrabResult grabResult = e.GrabResult;
+                //Console.WriteLine(grabResult.PixelTypeValue);
                 if (grabResult.IsValid)
                 {
                     if (!stopWatch.IsRunning || stopWatch.ElapsedMilliseconds > 33)
@@ -112,6 +114,7 @@ namespace BaslerCamera
                         Mat mat = null; 
                         switch (ImageFormatType)
                         {
+                            case ImageFormat.BayerRG8:
                             case ImageFormat.BGR8:
                                 {
                                     mat = new Mat(grabResult.Height, grabResult.Width, MatType.CV_8UC3);
@@ -150,21 +153,19 @@ namespace BaslerCamera
         private void ShowException(Exception exception)
         {
             System.Windows.MessageBox.Show("Exception caught:\n" + exception.Message, "Error");
+            Console.WriteLine(exception.Message);
         }
 
-        public void Init(out bool state)
+        public void Init()
         {
             try
             {
-                camera = new Camera();
                 camera.StreamGrabber.ImageGrabbed += OnImageGrabbed;
                 camera.CameraOpened += Configuration.AcquireContinuous;
-                state = true;
             }
             catch (Exception exception)
             {
                 ShowException(exception);
-                state = false;
             }
         }
 
@@ -174,6 +175,26 @@ namespace BaslerCamera
             camera.Open();
             Console.WriteLine("Camera Width {0}.", camera.Parameters[PLCamera.Width]);
             Console.WriteLine("Camera Height {0}.", camera.Parameters[PLCamera.Height]);
+            switch (ImageFormatType)
+            {
+                case ImageFormat.BayerRG8:
+                    {
+                        camera.Parameters[PLCamera.PixelFormat].TrySetValue(PLCamera.PixelFormat.BayerRG8);
+                        break;
+                    }
+                case ImageFormat.BGR8:
+                    {
+                        camera.Parameters[PLCamera.PixelFormat].TrySetValue(PLCamera.PixelFormat.BGR8);
+                        break;
+                    }
+                case ImageFormat.Mono8:
+                    {
+                        camera.Parameters[PLCamera.PixelFormat].TrySetValue(PLCamera.PixelFormat.Mono8);
+                        break;
+                    }
+            }
+            Console.WriteLine("PixelFormat:{0}", camera.Parameters[PLCamera.PixelFormat].GetValue());
+            Console.WriteLine("========================");
         }
 
         public void ContinueAcquisition()
