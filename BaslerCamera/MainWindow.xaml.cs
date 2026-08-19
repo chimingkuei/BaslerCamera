@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Camera = Basler.Pylon.Camera;
 
 namespace BaslerCamera
 {
@@ -97,13 +98,7 @@ namespace BaslerCamera
         {
             bc.Display = Display_Windows;
             bc.Init();
-            if (Display_Windows.Image == null)
-            {
-                DisableAllButtons(this);
-                bc.OpenCamera();
-                //DisableAllToggleButton(this);
-            }
-            
+            bc.OpenCamera();
         }
 
         private Dictionary<string, double> GetCameraParameterRage()
