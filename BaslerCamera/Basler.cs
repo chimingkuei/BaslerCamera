@@ -32,6 +32,7 @@ namespace BaslerCamera
         public int threshold { get; set; }
         public Mat image { get; set; }
         public ImageFormat ImageFormatType { get; set; }
+        public bool trigger { get; set; }
 
         #region Old Version
         //private void OnImageGrabbed(Object sender, ImageGrabbedEventArgs e)
@@ -161,7 +162,8 @@ namespace BaslerCamera
             try
             {
                 camera.StreamGrabber.ImageGrabbed += OnImageGrabbed;
-                camera.CameraOpened += Configuration.AcquireContinuous;
+                if (!trigger)
+                    camera.CameraOpened += Configuration.AcquireContinuous;
             }
             catch (Exception exception)
             {
@@ -175,6 +177,16 @@ namespace BaslerCamera
             camera.Open();
             Console.WriteLine("Camera Width {0}.", camera.Parameters[PLCamera.Width]);
             Console.WriteLine("Camera Height {0}.", camera.Parameters[PLCamera.Height]);
+            if (trigger)
+            {
+                camera.Parameters[PLCamera.TriggerSelector].SetValue(PLCamera.TriggerSelector.FrameStart);
+                camera.Parameters[PLCamera.TriggerMode].SetValue(PLCamera.TriggerMode.On);
+                camera.Parameters[PLCamera.TriggerSource].SetValue(PLCamera.TriggerSource.Line1);
+                if (camera.Parameters[PLCamera.TriggerActivation].IsWritable)
+                {
+                    camera.Parameters[PLCamera.TriggerActivation].SetValue(PLCamera.TriggerActivation.RisingEdge);
+                }
+            } 
             switch (ImageFormatType)
             {
                 case ImageFormat.BayerRG8:
@@ -202,7 +214,8 @@ namespace BaslerCamera
             try
             {
                 // Start the grabbing of images until grabbing is stopped.
-                Configuration.AcquireContinuous(camera, null);
+                if (!trigger)
+                    Configuration.AcquireContinuous(camera, null);
                 camera.StreamGrabber.Start(GrabStrategy.OneByOne, GrabLoop.ProvidedByStreamGrabber);
             }
             catch (Exception exception)

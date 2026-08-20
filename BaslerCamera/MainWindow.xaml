@@ -44,25 +44,29 @@
                     <WindowsFormsHost  Margin="5,7,218,4">
                         <wf:PictureBox x:Name="Display_Windows" BorderStyle="FixedSingle" MouseMove="Image_MouseMove"/>
                     </WindowsFormsHost>
-                    <WrapPanel Orientation="Horizontal" Margin="756,-2,0,0">
-                        <ToggleButton Name="Continue_Acquisition" Style="{StaticResource BaseToggleButton}" Margin="67,53,0,0" Background="#FFE6F0FF" BorderThickness="0" Checked="Continue_Acquisition_CheckedUnchecked" Unchecked="Continue_Acquisition_CheckedUnchecked">
+                    <WrapPanel Orientation="Horizontal" Margin="756,0,0,0">
+                        <ToggleButton Name="Continue_Acquisition" Style="{StaticResource BaseToggleButton}" Margin="67,34,0,0" Background="#FFE6F0FF" BorderThickness="0" Checked="Continue_Acquisition_CheckedUnchecked" Unchecked="Continue_Acquisition_CheckedUnchecked">
                             <ToggleButton.ToolTip>
                                 <TextBlock FontSize="14">Continue Acquisition</TextBlock>
                             </ToggleButton.ToolTip>
                             <Image Name="Continue_Acquisition_Icon" Source="Icon/Start.png" Width="82" Height="76"/>
                         </ToggleButton>
-                        <Button x:Name="Save_Image" Style="{StaticResource BaseButton}" Margin="67,53,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Main_Btn_Click">
+                        <Button x:Name="Save_Image" Style="{StaticResource BaseButton}" Margin="67,34,0,0" FontSize="18" Background="#FFE6F0FF" BorderThickness="0" Click="Main_Btn_Click">
                             <Button.ToolTip>
                                 <TextBlock FontSize="14">Save Image</TextBlock>
                             </Button.ToolTip>
                             <Image x:Name="Save_Image_Icon" Source="Icon/Save File.png" Width="82" Height="76"/>
                         </Button>
-                        <ComboBox x:Name="ImageFormatComboBox" Style="{StaticResource BaseComboBox}" Width="114" Margin="51,53,0,0" Height="28">
-                            <ComboBoxItem>Mono8</ComboBoxItem>
-                            <ComboBoxItem>BGR8</ComboBoxItem>
-                            <ComboBoxItem>BayerRG8</ComboBoxItem>
+                        <ComboBox x:Name="ImageFormatComboBox" Style="{StaticResource BaseComboBox}" Width="114" Margin="51,34,0,0" Height="28">
+                            <ComboBoxItem Content="Mono8"/>
+                            <ComboBoxItem Content="BGR8"/>
+                            <ComboBoxItem Content="BayerRG8"/>
                         </ComboBox>
-                        <Label x:Name="Show_RGB" Margin="38,140,0,0" Height="37" Width="140" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" Margin="48,34,0,0">
+                            <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Trigger"/>
+                            <CheckBox x:Name="Trigger" Style="{StaticResource BaseCheckBox}" Background="#5387b9" IsChecked="False" Content="Off" Tag="On" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        <Label x:Name="Show_RGB" Margin="38,34,0,0" Height="37" Width="140" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     </WrapPanel>
                 </Grid>
             </TabItem>

@@ -251,6 +251,8 @@ namespace BaslerCamera
             {
                 try
                 {
+                    if ((bool)Trigger.IsChecked)
+                        bc.trigger = true;
                     switch (ImageFormatComboBox.Text)
                     {
                         case "BGR8": bc.ImageFormatType = ImageFormat.BGR8; break;
